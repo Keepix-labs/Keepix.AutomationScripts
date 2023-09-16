@@ -28,6 +28,7 @@
         - "  option domain-name 'local';"
         - "  option domain-name-servers 8.8.8.8, 8.8.4.4;"
         - "}"
+        
 
     - name: Configure network interface
       lineinfile:
