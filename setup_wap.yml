@@ -75,8 +75,8 @@
         name: "{{ item }}"
         state: started
       loop:
-        - hostapd
         - isc-dhcp-server
+        - hostapd
 
     - name: Enable hostapd and dhcp server at boot
       service:
