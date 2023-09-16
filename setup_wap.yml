@@ -45,7 +45,6 @@
 
     - name: Configure hostapd
       copy:
-        src: /etc/hostapd/hostapd.conf
         dest: /etc/hostapd/hostapd.conf
         content: |
             interface=wlan0
