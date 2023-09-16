@@ -24,11 +24,11 @@
         path: /etc/hostapd/hostapd.conf
         state: absent
 
-    - name: Remove static IP configuration for wlan0
-      lineinfile:
+    - name: Remove WAP configuration static ip from network interfaces
+      replace:
         path: /etc/network/interfaces
-        regexp: "^iface wlan0"
-        state: absent
+        regexp: "^allow-hotplug wlan0$|^iface wlan0 inet manual$|^iface wlan0 inet static.*$"
+        replace: ""
 
     - name: Restart networking service
       service:
