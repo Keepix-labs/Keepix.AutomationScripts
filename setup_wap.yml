@@ -14,11 +14,20 @@
         - hostapd
         - isc-dhcp-server
 
-    - name: Remove DHCP server configuration lines
-      replace:
+    - name: Configure DHCP server
+      lineinfile:
         path: /etc/dhcp/dhcpd.conf
-        regexp: "(?s)^subnet 192.168.1.0 netmask 255.255.255.0 \{.*?\}\n*"
-        replace: ""
+        line: "{{ item }}"
+      loop:
+        - "subnet 192.168.1.0 netmask 255.255.255.0 {"
+        - "  range 192.168.1.10 192.168.1.50;"
+        - "  option broadcast-address 192.168.1.255;"
+        - "  option routers 192.168.1.1;"
+        - "  default-lease-time 600;"
+        - "  max-lease-time 7200;"
+        - "  option domain-name 'local';"
+        - "  option domain-name-servers 8.8.8.8, 8.8.4.4;"
+        - "}"
 
     - name: Configure network interface
       lineinfile:
