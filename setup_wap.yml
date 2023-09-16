@@ -39,6 +39,11 @@
         - "address 192.168.1.1"
         - "netmask 255.255.255.0"
 
+    - name: Restart networking service
+     service:
+       name: networking
+       state: restarted
+
     - name: Set static IP address
       command: ip address add 192.168.1.1/24 broadcast 192.168.1.255 dev wlan0
 
