@@ -35,7 +35,6 @@
         line: "{{ item }}"
       loop:
         - "allow-hotplug wlan0"
-        - "iface wlan0 inet manual"
         - "iface wlan0 inet static"
         - "address 192.168.1.1"
         - "netmask 255.255.255.0"
