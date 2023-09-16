@@ -1,0 +1,36 @@
+---
+- name: Remove Wireless Access Point (WAP) and Revert to DHCP
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Stop hostapd and isc-dhcp-server services
+      service:
+        name: "{{ item }}"
+        state: stopped
+      loop:
+        - hostapd
+        - isc-dhcp-server
+
+    - name: Disable hostapd and isc-dhcp-server at boot
+      service:
+        name: "{{ item }}"
+        enabled: no
+      loop:
+        - hostapd
+        - isc-dhcp-server
+
+    - name: Remove WAP configuration file
+      file:
+        path: /etc/hostapd/hostapd.conf
+        state: absent
+
+    - name: Remove static IP configuration for wlan0
+      lineinfile:
+        path: /etc/network/interfaces
+        regexp: "^iface wlan0"
+        state: absent
+
+    - name: Restart networking service
+      service:
+        name: networking
+        state: restarted
