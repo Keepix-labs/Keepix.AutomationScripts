@@ -37,8 +37,8 @@
         - "allow-hotplug wlan0"
         - "iface wlan0 inet manual"
         - "iface wlan0 inet static"
-        - "  address 192.168.1.1"
-        - "  netmask 255.255.255.0"
+        - "address 192.168.1.1"
+        - "netmask 255.255.255.0"
 
     - name: Set static IP address
       command: ip address add 192.168.1.1/24 broadcast 192.168.1.255 dev wlan0
