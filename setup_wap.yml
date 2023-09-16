@@ -48,7 +48,6 @@
         dest: /etc/hostapd/hostapd.conf
         content: |
             interface=wlan0
-            driver=rtl871xdrv
             ssid={{ ssid }}
             hw_mode=g
             channel=6
