@@ -4,8 +4,16 @@
   become: yes
   vars:
     ssid: "{{ ssid }}"
-    wpa_passphrase: "{{ wpa_passphrase }}"
   tasks:
+    - name: Check if connected to Wi-Fi
+      command: iwgetid -r
+      register: wifi_ssid
+      ignore_errors: yes
+
+    - name: Disconnect from Wi-Fi if connected
+      command: nmcli connection down "{{ wifi_ssid.stdout }}"
+      when: wifi_ssid.stdout is defined
+    
     - name: Install necessary packages
       apt:
         name: "{{ item }}"
@@ -59,11 +67,6 @@
             macaddr_acl=0
             auth_algs=1
             ignore_broadcast_ssid=0
-            wpa=2
-            wpa_passphrase={{ wpa_passphrase }}
-            wpa_key_mgmt=WPA-PSK
-            wpa_pairwise=TKIP
-            rsn_pairwise=CCMP
 
     - name: Update hostapd configuration file path
       lineinfile:
