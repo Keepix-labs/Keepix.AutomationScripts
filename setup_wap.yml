@@ -13,6 +13,7 @@
     - name: Disconnect from Wi-Fi if connected
       command: nmcli connection down "{{ wifi_ssid.stdout }}"
       when: wifi_ssid.stdout is defined
+      ignore_errors: yes
     
     - name: Install necessary packages
       apt:
@@ -21,6 +22,14 @@
       loop:
         - hostapd
         - isc-dhcp-server
+
+    - name: Stop hostapd and dhcp server services
+      service:
+        name: "{{ item }}"
+        state: stopped
+      loop:
+        - isc-dhcp-server
+        - hostapd
 
     - name: Configure DHCP server
       lineinfile:
