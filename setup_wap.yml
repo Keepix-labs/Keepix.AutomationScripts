@@ -31,6 +31,23 @@
         - isc-dhcp-server
         - hostapd
 
+    - name: Check if DHCP process exists
+      shell: ps aux | grep dhcp | grep -v grep
+      register: dhcp_process
+      ignore_errors: yes
+
+    - name: Kill DHCP process if it exists
+      shell: "kill -9 {{ dhcp_process.stdout.split()[1] }}"
+      when: dhcp_process.stdout is defined
+      ignore_errors: yes
+
+    - name: Remove DHCP PID file
+      file:
+        path: /var/run/dhcp.pid
+        state: absent
+      when: dhcp_process.stdout is defined
+      ignore_errors: yes
+
     - name: Configure DHCP server
       lineinfile:
         path: /etc/dhcp/dhcpd.conf
@@ -61,6 +78,10 @@
       service:
         name: networking
         state: restarted
+      
+    - name: Remove existing IP configuration from wlan0
+      command: ip address flush dev wlan0
+      ignore_errors: yes
 
     - name: Set static IP address
       command: ip address add 192.168.1.1/24 broadcast 192.168.1.255 dev wlan0
